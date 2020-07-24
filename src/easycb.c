@@ -166,7 +166,7 @@ opensocket_callback(void *clientp, curlsocktype purpose,
     PyObject *result = NULL;
     PyObject *fileno_result = NULL;
     CurlObject *self;
-    int ret = CURL_SOCKET_BAD;
+    int ret = (int)CURL_SOCKET_BAD;
     PyObject *converted_address;
     PyObject *python_address;
     PYCURL_DECLARE_THREAD_STATE;
@@ -202,12 +202,12 @@ opensocket_callback(void *clientp, curlsocktype purpose,
     }
 
     if (PyInt_Check(result) && PyInt_AsLong(result) == CURL_SOCKET_BAD) {
-        ret = CURL_SOCKET_BAD;
+        ret = (int)CURL_SOCKET_BAD;
     } else if (PyObject_HasAttrString(result, "fileno")) {
         fileno_result = PyObject_CallMethod(result, "fileno", NULL);
 
         if (fileno_result == NULL) {
-            ret = CURL_SOCKET_BAD;
+            ret = (int)CURL_SOCKET_BAD;
             goto verbose_error;
         }
         // normal operation:
@@ -221,11 +221,11 @@ opensocket_callback(void *clientp, curlsocktype purpose,
             goto done;
         } else {
             PyErr_SetString(ErrorObject, "Open socket callback returned an object whose fileno method did not return an integer");
-            ret = CURL_SOCKET_BAD;
+            ret = (int)CURL_SOCKET_BAD;
         }
     } else {
         PyErr_SetString(ErrorObject, "Open socket callback's return value must be a socket");
-        ret = CURL_SOCKET_BAD;
+        ret = (int)CURL_SOCKET_BAD;
         goto verbose_error;
     }
 

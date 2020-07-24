@@ -9,7 +9,7 @@ dup_winsock(int sock, const struct curl_sockaddr *address)
 
     rv = WSADuplicateSocket(sock, GetCurrentProcessId(), &pi);
     if (rv) {
-        return CURL_SOCKET_BAD;
+        return (int)CURL_SOCKET_BAD;
     }
 
     /* not sure if WSA_FLAG_OVERLAPPED is needed, but it does not seem to hurt */
